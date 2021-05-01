@@ -2,10 +2,14 @@ package com.udacity.jwdnd.course1.cloudstorage;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
@@ -38,4 +42,42 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
+	@Test
+	public void testLoginFail() {
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+		Assertions.assertEquals("Invalid username or password",loginPage.getError());
+	}
+
+	@Test
+	public void signupLoginSuccess() {
+		//Signup
+		SignupPage signupPage=new SignupPage(driver,port);
+		signupPage.signupWithValues("Bhaskar",
+									"Dhara",
+									"bhaskar",
+									"1234"
+		);
+		Assertions.assertTrue(
+				signupPage.getSuccessText().contains("successfully signed up")
+		);
+
+		//Login
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+		//Checking successful login
+		Assertions.assertEquals("Home", driver.getTitle());
+	}
+
+	@Test
+	public void addNotes() throws InterruptedException {
+		signupLoginSuccess();
+
+		NotePage notePage=new NotePage(driver);
+		notePage.addNote();
+
+		Thread.sleep(5000);
+
+	}
 }

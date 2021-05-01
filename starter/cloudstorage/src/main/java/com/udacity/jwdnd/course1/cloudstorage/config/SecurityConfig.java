@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .permitAll();
         http.formLogin()
-                .defaultSuccessUrl("/chat");
+                .defaultSuccessUrl("/home");
 
         http.authorizeRequests().antMatchers("/signup","/css/**", "/static/js/**").permitAll()
                 .anyRequest().authenticated();
