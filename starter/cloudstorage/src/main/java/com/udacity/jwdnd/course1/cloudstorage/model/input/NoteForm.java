@@ -5,6 +5,7 @@ import lombok.experimental.Tolerate;
 
 @Data
 public class NoteForm {
+    private String noteId;
     private String noteTitle;
     private String noteDescription;
 }

@@ -66,7 +66,7 @@
                         </button>
 
                         <div class="table-responsive">
-                            <div class="alert alert-success fill-parent" th:if="${param.success}">
+                            <div id="" aria-activedescendant="" class="alert alert-success fill-parent" th:if="${param.success}">
                                 <span th:text="${param.message}">Operation Success</span>
                             </div>
 
@@ -82,13 +82,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr th:each="note: ${notes}">
                                         <td>
-                                            <button type="button" class="btn btn-success">Edit</button>
-                                            <a class="btn btn-danger">Delete</a>
+                                            <button type="button" class="btn btn-success"
+                                                    th:onclick="showNoteModal([[${note.noteid}]],
+                                                    [[${note.title}]], [[${note.description}]])">Edit
+                                            </button>
+                                            <a th:href="@{'home/notes/delete/' + ${note.noteid}}" class="btn btn-danger">Delete</a>
                                         </td>
-                                        <th scope="row">Example Note Title</th>
-                                        <td>Example Note Description </td>
+                                        <th scope="row" th:text="${note.title}">Example Note Title</th>
+                                        <td th:text="${note.description}">Example Note Description </td>
                                     </tr>
                                 </tbody>
                             </table>

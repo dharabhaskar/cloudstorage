@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
 
+import com.udacity.jwdnd.course1.cloudstorage.exception.NoteOperationFailed;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import org.springframework.stereotype.Service;
@@ -15,11 +16,26 @@ public class NoteService {
         this.noteMapper = noteMapper;
     }
 
-    public int addNote(Note note){
-        return noteMapper.insertNote(note);
-    }
 
+    public void deleteNote(int noteid){
+        noteMapper.deleteNote(noteid);
+    }
     public List<Note> getNotesByUser(int userid) {
         return noteMapper.getNotesByUser(userid);
+    }
+
+    public String addOrUpdate(Note note) {
+        boolean isUpdate=note.getNoteid()>0;
+        try{
+            if(isUpdate){
+                noteMapper.updateNote(note);
+                return "Note updated successfully.";
+            }else{
+                noteMapper.insertNote(note);
+                return "Note added successfully";
+            }
+        }catch (Exception ex){
+            throw new NoteOperationFailed("Note "+(isUpdate?" update ":" add")+" failed");
+        }
     }
 }

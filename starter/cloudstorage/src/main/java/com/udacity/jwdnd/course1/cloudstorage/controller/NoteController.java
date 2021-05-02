@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+import com.udacity.jwdnd.course1.cloudstorage.exception.NoteOperationFailed;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.model.input.NoteForm;
@@ -8,10 +9,7 @@ import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -28,29 +26,16 @@ public class NoteController {
     }
 
 
-    @GetMapping
-    public String getNotesByUser(Authentication auth,RedirectAttributes attr) {
-        User user = userService.getUserByUsername(auth.getName());
-        try {
-            List<Note> notes = noteService.getNotesByUser(user.getUserid());
-            attr.addAttribute("notes",notes);
-            attr.addAttribute("success", true);
-        } catch (Exception ex) {
-            attr.addAttribute("error", true);
-            ex.printStackTrace();
-        }
-        attr.addAttribute("message","");
-
-
-
-        return "home";
-    }
-
     @PostMapping()
     public String addNote(Authentication auth, @ModelAttribute NoteForm noteForm, RedirectAttributes attr) {
         User user = userService.getUserByUsername(auth.getName());
 
+        System.out.println("Logged in user: "+user.getUsername());
+
+        noteForm.setNoteId(noteForm.getNoteId().equals("")?"0":noteForm.getNoteId());
+
         Note note = Note.builder()
+                .noteid(Integer.parseInt(noteForm.getNoteId()))
                 .title(noteForm.getNoteTitle())
                 .description(noteForm.getNoteDescription())
                 .userid(user.getUserid())
@@ -58,12 +43,30 @@ public class NoteController {
         String message="";
 
         try {
-            noteService.addNote(note);
+            message=noteService.addOrUpdate(note);
             attr.addAttribute("success", true);
-            message="Note added successfully....";
+        } catch (NoteOperationFailed ex) {
+            attr.addAttribute("error", true);
+            message=ex.getMessage();
+            ex.printStackTrace();
+        }
+        attr.addAttribute("message",message);
+
+        return "redirect:/home";
+    }
+
+    @GetMapping("/delete/{noteId}")
+    public String deleteNote(@PathVariable int noteId,RedirectAttributes attr){
+        noteService.deleteNote(noteId);
+        String message="";
+
+        try {
+            noteService.deleteNote(noteId);
+            attr.addAttribute("success", true);
+            message="Note deleted successfully....";
         } catch (Exception ex) {
             attr.addAttribute("error", true);
-            message="Note add failed.";
+            message="Note delete failed.";
             ex.printStackTrace();
         }
         attr.addAttribute("message",message);
