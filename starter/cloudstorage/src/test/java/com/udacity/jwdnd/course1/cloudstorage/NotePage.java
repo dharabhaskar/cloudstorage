@@ -25,6 +25,15 @@ public class NotePage {
     @FindBy(xpath = "//*[@id=\"noteModal\"]/div/div/div[3]/button[2]")
     private WebElement noteAddButton;
 
+    @FindBy(id = "noteOpSuccess")
+    private WebElement noteOpSuccessText;
+
+    @FindBy(xpath = "//*[@id=\"userTable\"]/tbody/tr[1]/td[1]/button")
+    WebElement editButton;
+
+    @FindBy(xpath = "//*[@id=\"userTable\"]/tbody/tr[1]/th")
+    WebElement firstNoteTitle;
+
 
 
     private final JavascriptExecutor executor;
@@ -34,6 +43,7 @@ public class NotePage {
         PageFactory.initElements(driver,this);
          executor = (JavascriptExecutor)driver;
          this.driver=driver;
+
     }
 
     public void waitForField(WebElement field){
@@ -41,20 +51,51 @@ public class NotePage {
         wait.until(ExpectedConditions.elementToBeClickable(field));
     }
 
-    public void addNote() throws InterruptedException {
+    public void openNoteTab(){
         waitForField(navNotes);
-        navNotes.click();
+        executor.executeScript("arguments[0].click();", navNotes);
+    }
+
+    public void addNote(String title,String description) {
+        openNoteTab();
 
         waitForField(addNoteButton);
         addNoteButton.click();
 
         waitForField(noteTitleField);
-        noteTitleField.sendKeys("Hello");
+        noteTitleField.sendKeys(title);
 
         waitForField(noteDescriptionField);
-        noteDescriptionField.sendKeys("Sample description.");
+        noteDescriptionField.sendKeys(description);
 
         waitForField(noteAddButton);
         noteAddButton.click();
+    }
+
+    public void editNote() {
+        openNoteTab();
+
+        waitForField(editButton);
+        editButton.click();
+        //executor.executeScript("arguments[0].click();", editButton);
+
+        waitForField(noteTitleField);
+        noteTitleField.sendKeys(noteTitleField.getText()+" updated");
+
+        waitForField(noteDescriptionField);
+        noteDescriptionField.sendKeys(noteDescriptionField.getText()+" update");
+
+        waitForField(noteAddButton);
+        noteAddButton.click();
+    }
+
+    public String getNoteOperationSuccessText(){
+        waitForField(noteOpSuccessText);
+        return noteOpSuccessText.getText();
+    }
+
+    public String getFirstTitleValue(){
+        waitForField(firstNoteTitle);
+        return firstNoteTitle.getText();
     }
 }

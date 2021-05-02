@@ -72,10 +72,31 @@ class CloudStorageApplicationTests {
 
 	@Test
 	public void addNotes() throws InterruptedException {
-		signupLoginSuccess();
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
 
 		NotePage notePage=new NotePage(driver);
-		notePage.addNote();
+		notePage.addNote("Hello","Sample Description");
+
+		Assertions.assertEquals("Note added successfully",notePage.getNoteOperationSuccessText());
+
+		Thread.sleep(5000);
+
+	}
+
+	@Test
+	public void editNotes() throws InterruptedException {
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+		NotePage notePage=new NotePage(driver);
+		notePage.editNote();
+
+		Assertions.assertTrue(
+				notePage.getFirstTitleValue().contains("updated")
+		);
+
+		Assertions.assertEquals("Note updated successfully.",notePage.getNoteOperationSuccessText());
 
 		Thread.sleep(5000);
 
