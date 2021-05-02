@@ -71,6 +71,22 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
+	public void checkSuccessfulLogout(){
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+		Assertions.assertEquals("Home",driver.getTitle());
+
+
+		loginPage.logout();
+
+		Assertions.assertEquals("You have been logged out",loginPage.getLogoutText());
+	}
+
+	//--------------------- N O T E S   T E S T I N G ---------------------
+
+
+	@Test
 	public void addNotes() throws InterruptedException {
 		LoginPage loginPage=new LoginPage(driver,port);
 		loginPage.submitPageWith("bhaskar","1234");

@@ -16,9 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
-@RequestMapping("/login")
 public class LoginController {
-    @GetMapping()
+    @GetMapping("/login")
     public String login(){return "login";}
 
     @PostMapping("/logout")
