@@ -11,13 +11,14 @@ import java.util.List;
 @Mapper
 public interface NoteMapper {
     //Get all notes of a specific user.
-    @Select("select * from notes where username=#{username}")
-    public List<Note> getNotesByUser();
+    @Select("select * from NOTES where userid=#{userid}")
+    public List<Note> getNotesByUser(int userid);
 
     //Insert note
-    @Insert("insert into notes(noteid,notetitle,notedescrption) values(#{id},#{title},#{description})")
-    @Options(useGeneratedKeys = true,keyProperty = "id")
+    @Insert("insert into NOTES(notetitle,notedescription) values(#{title},#{description})")
+    @Options(useGeneratedKeys = true,keyProperty = "noteid")
     public int insertNote(Note note);
+
 
     //Delete note
 

@@ -66,6 +66,13 @@
                         </button>
 
                         <div class="table-responsive">
+                            <div class="alert alert-success fill-parent" th:if="${param.success}">
+                                <span th:text="${param.message}">Operation Success</span>
+                            </div>
+
+                            <div class="alert alert-danger fill-parent" th:if="${param.error}">
+                                <span th:text="${param.message}">Operation Failed</span>
+                            </div>
                             <table class="table table-striped" id="userTable">
                                 <thead>
                                     <tr>
@@ -97,7 +104,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" th:action="@{/notes}" method="POST">
+                                        <form action="#" th:action="@{/home/notes}" method="POST">
                                             <input type="hidden" name="noteId" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
@@ -117,6 +124,8 @@
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                     <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
                         <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
@@ -182,6 +191,27 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Alert Modal -->
+                    <div class="modal fade" id="myModal" role="dialog">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Modal Header</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p id="error"></p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -192,6 +222,16 @@
 
         <!--For opening the note modal-->
         <script type="text/javascript">
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                console.log("tab shown...");
+                localStorage.setItem('activeTab', $(e.target).attr('href'));
+            });
+            var activeTab = localStorage.getItem('activeTab');
+
+            if (activeTab) {
+               $('.nav-tabs a[href="' + activeTab + '"]').tab('show');
+            }
+
             // For opening the note modal
             function showNoteModal(noteId, noteTitle, noteDescription) {
                 $('#note-id').val(noteId ? noteId : '');

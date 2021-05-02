@@ -8,7 +8,7 @@ import lombok.experimental.Tolerate;
 @Data
 @Builder
 public class Note {
-    private int id;
+    private int noteid;
     private String title;
     private String description;
     private int userid;
