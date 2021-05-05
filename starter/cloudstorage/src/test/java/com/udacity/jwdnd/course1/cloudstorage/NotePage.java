@@ -1,13 +1,15 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 public class NotePage {
     @FindBy(css = "a[href='#nav-notes']")
@@ -29,34 +31,36 @@ public class NotePage {
     private WebElement noteOpSuccessText;
 
     @FindBy(xpath = "//*[@id=\"userTable\"]/tbody/tr[1]/td[1]/button")
-    WebElement editButton;
+    WebElement firstEditButton;
 
     @FindBy(xpath = "//*[@id=\"userTable\"]/tbody/tr[1]/th")
     WebElement firstNoteTitle;
 
+    @FindBy(xpath = "//*[@id=\"noteTable\"]/tbody/tr/td[1]/a")
+    WebElement firstDeleteButton;
 
 
     private final JavascriptExecutor executor;
     private final WebDriver driver;
 
-    public NotePage(WebDriver driver){
-        PageFactory.initElements(driver,this);
-         executor = (JavascriptExecutor)driver;
-         this.driver=driver;
+    public NotePage(WebDriver driver) {
+        PageFactory.initElements(driver, this);
+        executor = (JavascriptExecutor) driver;
+        this.driver = driver;
 
     }
 
-    public void waitForField(WebElement field){
-        WebDriverWait wait=new WebDriverWait(driver,2000);
+    public void waitForField(WebElement field) {
+        WebDriverWait wait = new WebDriverWait(driver, 2000);
         wait.until(ExpectedConditions.elementToBeClickable(field));
     }
 
-    public void openNoteTab(){
+    public void openNoteTab() {
         waitForField(navNotes);
         executor.executeScript("arguments[0].click();", navNotes);
     }
 
-    public void addNote(String title,String description) {
+    public void addNote(String title, String description) {
         openNoteTab();
 
         waitForField(addNoteButton);
@@ -75,27 +79,48 @@ public class NotePage {
     public void editNote() {
         openNoteTab();
 
-        waitForField(editButton);
-        editButton.click();
+        waitForField(firstEditButton);
+        firstEditButton.click();
         //executor.executeScript("arguments[0].click();", editButton);
 
         waitForField(noteTitleField);
-        noteTitleField.sendKeys(noteTitleField.getText()+" updated");
+        noteTitleField.sendKeys(noteTitleField.getText() + " updated");
 
         waitForField(noteDescriptionField);
-        noteDescriptionField.sendKeys(noteDescriptionField.getText()+" update");
+        noteDescriptionField.sendKeys(noteDescriptionField.getText() + " update");
 
         waitForField(noteAddButton);
         noteAddButton.click();
     }
 
-    public String getNoteOperationSuccessText(){
+    public String getNoteOperationSuccessText() {
         waitForField(noteOpSuccessText);
         return noteOpSuccessText.getText();
     }
 
-    public String getFirstTitleValue(){
+    public String getFirstTitleValue() {
         waitForField(firstNoteTitle);
         return firstNoteTitle.getText();
+    }
+
+    public int getNotesRecCount() {
+        openNoteTab();
+
+        // Grab the table
+        WebElement table = driver.findElement(By.id("noteTable"));
+        waitForField(table);
+
+
+        // Now get all the TR elements from the table
+        List<WebElement> allRows = table.findElements(By.tagName("tr"));
+
+        return allRows.size();
+    }
+
+    public void deleteNote() {
+        openNoteTab();
+
+        waitForField(firstDeleteButton);
+        firstDeleteButton.click();
     }
 }

@@ -115,6 +115,37 @@ class CloudStorageApplicationTests {
 		Assertions.assertEquals("Note updated successfully.",notePage.getNoteOperationSuccessText());
 
 		Thread.sleep(5000);
+	}
 
+	@Test
+	public void viewNotes() throws InterruptedException {
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+		NotePage notePage=new NotePage(driver);
+		//notePage.editNote();
+
+		int rowCount=notePage.getNotesRecCount();
+
+		System.out.println(rowCount);
+
+		Assertions.assertEquals(true,rowCount>1);
+
+		Thread.sleep(5000);
+	}
+
+	@Test
+	public void testNoteDelete(){
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+		NotePage notePage=new NotePage(driver);
+		int rowCountBeforeDelete=notePage.getNotesRecCount();
+
+		notePage.deleteNote();
+
+		int rowCountAfterDelete=notePage.getNotesRecCount();
+
+		Assertions.assertEquals(true,rowCountAfterDelete<rowCountBeforeDelete);
 	}
 }
