@@ -39,4 +39,12 @@ public class FileService {
     public List<Files> getFilesByUser(int userid) {
         return fileMapper.getAllFilesByUser(userid);
     }
+
+    public Files getFileById(int fileId) {
+        return fileMapper.getFileById(fileId);
+    }
+
+    public void deleteFile(int fileId) {
+        fileMapper.deleteFile(fileId);
+    }
 }

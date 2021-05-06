@@ -1,22 +1,22 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+import com.udacity.jwdnd.course1.cloudstorage.model.Files;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static com.udacity.jwdnd.course1.cloudstorage.utils.Constants.*;
 
 @Controller
 @RequestMapping("/home/files")
 public class FileController {
-    private final String ERROR = "error";
-    private final String MESSAGE = "message";
-    private final String SUCCESS = "success";
-    private final String REDIRECT_HOME = "redirect:/home";
 
     private final FileService fileService;
     private final UserService userService;
@@ -52,17 +52,41 @@ public class FileController {
         return REDIRECT_HOME;
     }
 
+    @GetMapping("/view/{fileId}")
+    public ResponseEntity viewFile(@PathVariable("fileId")int fileId){
+        Files file=fileService.getFileById(fileId);
+
+        return
+        ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(file.getContentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION,"inline;filename=\""+file.getFileName()+"\"")
+                .body(file.getFileData());
+    }
+
+    @GetMapping("/delete/{fileId}")
+    public String deleteFile(@PathVariable("fileId")int fileId,RedirectAttributes attr){
+        Files file=fileService.getFileById(fileId);
+        try{
+            fileService.deleteFile(fileId);
+            return sendSuccess(attr,"File "+file.getFileName()+" deleted successfully.");
+        }catch (Exception ex){
+            return sendError(attr,file.getFileName()+" delete failed!!");
+        }
+    }
+
     private String sendError(RedirectAttributes attr, String message) {
         System.out.println(message);
         attr.addAttribute(ERROR, true);
-        attr.addAttribute(MESSAGE, message);
+        attr.addAttribute(MESSAGE_FILES, message);
         return REDIRECT_HOME;
     }
 
     private String sendSuccess(RedirectAttributes attr, String message) {
         System.out.println(message);
         attr.addAttribute(SUCCESS, true);
-        attr.addAttribute(MESSAGE, message);
+        attr.addAttribute(MESSAGE_FILES, message);
         return REDIRECT_HOME;
     }
+
+
 }
