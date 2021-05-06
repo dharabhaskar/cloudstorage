@@ -36,6 +36,8 @@ class CloudStorageApplicationTests {
 		}
 	}
 
+	//--------------- L O G I N  AND  S I G N U P  T E S T ---------------------
+
 	@Test
 	public void getLoginPage() {
 		driver.get("http://localhost:" + this.port + "/login");
@@ -148,4 +150,19 @@ class CloudStorageApplicationTests {
 
 		Assertions.assertEquals(true,rowCountAfterDelete<rowCountBeforeDelete);
 	}
+
+	//-------------------------  F I L E S  T E S T ---------------------
+	@Test
+	public void addFile() throws InterruptedException {
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+		FilesPage filesPage=new FilesPage(driver);
+		filesPage.uploadFile();
+
+		Assertions.assertEquals("File uploaded successfully.",filesPage.getOpSuccessMessage());
+
+		Thread.sleep(5000);
+	}
+
 }
