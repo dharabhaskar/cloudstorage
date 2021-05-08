@@ -2,14 +2,10 @@ package com.udacity.jwdnd.course1.cloudstorage;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-
-import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
@@ -153,16 +149,47 @@ class CloudStorageApplicationTests {
 
 	//-------------------------  F I L E S  T E S T ---------------------
 	@Test
-	public void addFile() throws InterruptedException {
+	public void addFileTest() throws InterruptedException {
 		LoginPage loginPage=new LoginPage(driver,port);
 		loginPage.submitPageWith("bhaskar","1234");
 
 		FilesPage filesPage=new FilesPage(driver);
-		filesPage.uploadFile();
+		filesPage.uploadFile("/home/tablu/Desktop/demo.txt");
 
-		Assertions.assertEquals("File uploaded successfully.",filesPage.getOpSuccessMessage());
+		Assertions.assertEquals(true,
+				filesPage.getOpSuccessMessage().contains("uploaded successfully."));
 
 		Thread.sleep(5000);
+	}
+
+	@Test
+	public void deleteFileTest() throws InterruptedException {
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+		FilesPage filesPage=new FilesPage(driver);
+		filesPage.deleteFile();
+
+		Assertions.assertEquals(true,
+				filesPage.getOpSuccessMessage().contains("deleted successfully."));
+
+		Thread.sleep(5000);
+	}
+
+	@Test
+	public void viewFilesTest() throws InterruptedException {
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+		FilesPage filesPage=new FilesPage(driver);
+		int rowCount=filesPage.getFileRecCount();
+
+		System.out.println(rowCount);
+
+		Assertions.assertEquals(true,rowCount>1);
+
+		Thread.sleep(5000);
+
 	}
 
 }
