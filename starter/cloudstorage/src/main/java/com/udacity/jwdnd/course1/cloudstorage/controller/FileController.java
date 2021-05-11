@@ -1,8 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Files;
-import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
-import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import com.udacity.jwdnd.course1.cloudstorage.service.FileService;
+import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

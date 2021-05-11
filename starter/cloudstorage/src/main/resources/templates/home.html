@@ -147,8 +147,16 @@
                             + Add a New Credential
                         </button>
 
+                        <div  aria-activedescendant="" class="alert alert-success fill-parent" th:if="${param.success} and ${param.msg_c}!=null">
+                            <span id="credOpSuccess" th:text="${param.msg_c}">Operation Success</span>
+                        </div>
+
+                        <div  class="alert alert-danger fill-parent" th:if="${param.error} and ${param.msg_c}!=null">
+                            <span id="credOpError" th:text="${param.msg_c}">Operation Failed</span>
+                        </div>
+
                         <div class="table-responsive">
-                            <table class="table table-striped" th:object="${credentials}" id="credentialTable">
+                            <table class="table table-striped" id="credentialTable">
                                 <thead>
                                     <tr>
                                         <th style="width: 20%" scope="col"></th>
@@ -158,14 +166,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr th:each="credential: ${credentials}">
                                     <td>
-                                        <button type="button" class="btn btn-success">Edit</button>
-                                        <a class="btn btn-danger">Delete</a>
+                                        <button type="button" class="btn btn-success"
+                                                th:onclick="showCredentialModal([[${credential.credentialId}]],
+                                                [[${credential.url}]],[[${credential.username}]],
+                                [[${encryptionService.decryptValue(credential.password, credential.key)}]])">Edit</button>
+                                        <a th:href="@{'home/credentials/delete/' + ${credential.credentialId}}"
+                                           method="POST" class="btn btn-danger">Delete</a>
                                     </td>
-                                    <th scope="row">Example Credential URL</th>
-                                    <td>Example Credential Username</td>
-                                    <td>Example Credential Password</td>
+                                    <th th:text="${credential.url}" scope="row">Example Credential URL</th>
+                                    <td th:text="${credential.username}">Example Credential Username</td>
+                                    <td th:text="${credential.password}">Example Credential Password</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -181,7 +193,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST">
+                                        <form action="#" th:action="@{home/credentials}" method="POST">
                                             <input type="hidden" name="credentialId" id="credential-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>

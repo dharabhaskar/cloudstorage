@@ -4,15 +4,12 @@ import com.udacity.jwdnd.course1.cloudstorage.exception.NoteOperationFailed;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.model.input.NoteForm;
-import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
-import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import com.udacity.jwdnd.course1.cloudstorage.service.NoteService;
+import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/home/notes")
