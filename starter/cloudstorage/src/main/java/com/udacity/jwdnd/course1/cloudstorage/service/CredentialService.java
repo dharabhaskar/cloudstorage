@@ -5,6 +5,7 @@ import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CredentialService {
@@ -17,11 +18,15 @@ public class CredentialService {
     }
 
     public List<Credential> getAllCredentials(int userId){
-        return mapper.getCredentialsByUser(userId);
+        return mapper.getCredentialsByUser(userId)
+                .stream().peek(c-> c.setDecryptedPassword(encryptionService.decryptValue(c.getPassword(),c.getKey())))
+                .collect(Collectors.toList());
     }
 
     public int insertCredential(int userId, Credential credential){
         credential.setUserId(userId);
+        String key=encryptionService.generateKey();
+        credential.setKey(key);
         String hashedCredential= encryptionService.encryptValue(credential.getPassword(),credential.getKey());
         credential.setPassword(hashedCredential);
         return mapper.addCredential(credential);

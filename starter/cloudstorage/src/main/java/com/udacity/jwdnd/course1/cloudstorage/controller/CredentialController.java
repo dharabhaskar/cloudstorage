@@ -96,14 +96,14 @@ public class CredentialController {
     private String sendError(RedirectAttributes attr, String message) {
         System.out.println(message);
         attr.addAttribute(ERROR, true);
-        attr.addAttribute(MESSAGE_FILES, message);
+        attr.addAttribute(MESSAGE_CRED, message);
         return REDIRECT_HOME;
     }
 
     private String sendSuccess(RedirectAttributes attr, String message) {
         System.out.println(message);
         attr.addAttribute(SUCCESS, true);
-        attr.addAttribute(MESSAGE_FILES, message);
+        attr.addAttribute(MESSAGE_CRED, message);
         return REDIRECT_HOME;
     }
 }

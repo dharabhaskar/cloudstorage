@@ -147,15 +147,14 @@
                             + Add a New Credential
                         </button>
 
-                        <div  aria-activedescendant="" class="alert alert-success fill-parent" th:if="${param.success} and ${param.msg_c}!=null">
-                            <span id="credOpSuccess" th:text="${param.msg_c}">Operation Success</span>
-                        </div>
-
-                        <div  class="alert alert-danger fill-parent" th:if="${param.error} and ${param.msg_c}!=null">
-                            <span id="credOpError" th:text="${param.msg_c}">Operation Failed</span>
-                        </div>
-
                         <div class="table-responsive">
+                            <div  aria-activedescendant="" class="alert alert-success fill-parent" th:if="${param.success} and ${param.msg_c}!=null">
+                                <span id="credOpSuccess" th:text="${param.msg_c}">Operation Success</span>
+                            </div>
+
+                            <div  class="alert alert-danger fill-parent" th:if="${param.error} and ${param.msg_c}!=null">
+                                <span id="credOpError" th:text="${param.msg_c}">Operation Failed</span>
+                            </div>
                             <table class="table table-striped" id="credentialTable">
                                 <thead>
                                     <tr>
@@ -171,7 +170,7 @@
                                         <button type="button" class="btn btn-success"
                                                 th:onclick="showCredentialModal([[${credential.credentialId}]],
                                                 [[${credential.url}]],[[${credential.username}]],
-                                [[${encryptionService.decryptValue(credential.password, credential.key)}]])">Edit</button>
+                                                [[${credential.decryptedPassword}]])">Edit</button>
                                         <a th:href="@{'home/credentials/delete/' + ${credential.credentialId}}"
                                            method="POST" class="btn btn-danger">Delete</a>
                                     </td>
