@@ -192,4 +192,32 @@ class CloudStorageApplicationTests {
 
 	}
 
+	//-------------- C R E D E N T I A L   T E S T S -------------------
+	@Test
+	public void addCredentialTest()throws InterruptedException{
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+		CredentialPage credentialPage=new CredentialPage(driver);
+		credentialPage.addCredential("http://mysite.com","bhaskar","1234");
+
+		Assertions.assertEquals("Your credentials added successfully.",credentialPage.getOpSuccessMessage());
+
+		Thread.sleep(5000);
+	}
+
+	@Test
+	public void deleteCredentialTest() throws InterruptedException {
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+
+		CredentialPage credentialPage=new CredentialPage(driver);
+		credentialPage.deleteCredential();
+
+		Assertions.assertEquals(true,
+				credentialPage.getOpSuccessMessage().contains("deleted successfully."));
+
+		Thread.sleep(5000);
+	}
 }
