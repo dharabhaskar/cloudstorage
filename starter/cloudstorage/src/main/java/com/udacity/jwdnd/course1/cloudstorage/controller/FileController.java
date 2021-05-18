@@ -9,12 +9,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.security.auth.login.FailedLoginException;
 
 import static com.udacity.jwdnd.course1.cloudstorage.utils.Constants.*;
 
 @Controller
+@ControllerAdvice
 @RequestMapping("/home/files")
 public class FileController {
 
@@ -88,5 +92,10 @@ public class FileController {
         return REDIRECT_HOME;
     }
 
-
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public String handleFileUploadError2(RedirectAttributes ra){
+        ra.addAttribute(ERROR, true);
+        ra.addAttribute(MESSAGE_FILES,"Max file size limit exceeds");
+        return REDIRECT_HOME;
+    }
 }

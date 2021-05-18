@@ -48,7 +48,19 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void signupLoginSuccess() {
+	@Order(2)
+	public void testLogin(){
+		//Login
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+		//Checking successful login
+		Assertions.assertEquals("Home", driver.getTitle());
+	}
+
+	@Test
+	@Order(1)
+	public void testSignup() {
 		//Signup
 		SignupPage signupPage=new SignupPage(driver,port);
 		signupPage.signupWithValues("Bhaskar",
@@ -59,13 +71,6 @@ class CloudStorageApplicationTests {
 		Assertions.assertTrue(
 				signupPage.getSuccessText().contains("successfully signed up")
 		);
-
-		//Login
-		LoginPage loginPage=new LoginPage(driver,port);
-		loginPage.submitPageWith("bhaskar","1234");
-
-		//Checking successful login
-		Assertions.assertEquals("Home", driver.getTitle());
 	}
 
 	@Test
@@ -150,8 +155,8 @@ class CloudStorageApplicationTests {
 	//-------------------------  F I L E S  T E S T ---------------------
 	@Test
 	public void addFileTest() throws InterruptedException {
-		LoginPage loginPage=new LoginPage(driver,port);
-		loginPage.submitPageWith("bhaskar","1234");
+		testSignup();
+		testLogin();
 
 		FilesPage filesPage=new FilesPage(driver);
 		filesPage.uploadFile("/home/tablu/Desktop/demo.txt");
