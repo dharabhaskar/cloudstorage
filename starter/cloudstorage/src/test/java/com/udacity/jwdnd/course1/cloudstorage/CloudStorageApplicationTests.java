@@ -6,7 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.context.event.annotation.AfterTestMethod;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class )
@@ -213,6 +212,23 @@ class CloudStorageApplicationTests {
 
 	@Test
 	@Order(52)
+	public void viewCredentials() throws InterruptedException {
+		testLogin();
+		CredentialPage credentialPage=new CredentialPage(driver,port);
+		//notePage.editNote();
+
+		int rowCount=credentialPage.getRowCount();
+
+		System.out.println(rowCount);
+
+		Assertions.assertEquals(true,rowCount>1);
+
+		Thread.sleep(2000);
+	}
+
+
+	@Test
+	@Order(53)
 	public void deleteCredentialTest() throws InterruptedException {
 		testLogin();
 

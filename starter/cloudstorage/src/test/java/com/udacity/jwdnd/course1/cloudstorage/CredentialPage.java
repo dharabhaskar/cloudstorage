@@ -85,7 +85,7 @@ public class CredentialPage {
         deleteFileButton.click();
     }
 
-    public int getFileRecCount() {
+    public int getRowCount() {
         openCredTab();
 
         // Grab the table
