@@ -6,8 +6,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.event.annotation.AfterTestMethod;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class )
 class CloudStorageApplicationTests {
 
 	@LocalServerPort
@@ -43,7 +45,7 @@ class CloudStorageApplicationTests {
 	@Test
 	public void testLoginFail() {
 		LoginPage loginPage=new LoginPage(driver,port);
-		loginPage.submitPageWith("bhaskar","1234");
+		loginPage.submitPageWith("bhaskaar","1234");
 		Assertions.assertEquals("Invalid username or password",loginPage.getError());
 	}
 
@@ -80,7 +82,6 @@ class CloudStorageApplicationTests {
 
 		Assertions.assertEquals("Home",driver.getTitle());
 
-
 		loginPage.logout();
 
 		Assertions.assertEquals("You have been logged out",loginPage.getLogoutText());
@@ -90,42 +91,22 @@ class CloudStorageApplicationTests {
 
 
 	@Test
+	@Order(31)
 	public void addNotes() throws InterruptedException {
-		LoginPage loginPage=new LoginPage(driver,port);
-		loginPage.submitPageWith("bhaskar","1234");
-
-		NotePage notePage=new NotePage(driver);
+		testLogin();
+		NotePage notePage=new NotePage(driver,port);
 		notePage.addNote("Hello","Sample Description");
 
 		Assertions.assertEquals("Note added successfully",notePage.getNoteOperationSuccessText());
-
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 
 	}
 
 	@Test
-	public void editNotes() throws InterruptedException {
-		LoginPage loginPage=new LoginPage(driver,port);
-		loginPage.submitPageWith("bhaskar","1234");
-
-		NotePage notePage=new NotePage(driver);
-		notePage.editNote();
-
-		Assertions.assertTrue(
-				notePage.getFirstTitleValue().contains("updated")
-		);
-
-		Assertions.assertEquals("Note updated successfully.",notePage.getNoteOperationSuccessText());
-
-		Thread.sleep(5000);
-	}
-
-	@Test
+	@Order(32)
 	public void viewNotes() throws InterruptedException {
-		LoginPage loginPage=new LoginPage(driver,port);
-		loginPage.submitPageWith("bhaskar","1234");
-
-		NotePage notePage=new NotePage(driver);
+		testLogin();
+		NotePage notePage=new NotePage(driver,port);
 		//notePage.editNote();
 
 		int rowCount=notePage.getNotesRecCount();
@@ -134,15 +115,33 @@ class CloudStorageApplicationTests {
 
 		Assertions.assertEquals(true,rowCount>1);
 
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 	}
 
 	@Test
-	public void testNoteDelete(){
-		LoginPage loginPage=new LoginPage(driver,port);
-		loginPage.submitPageWith("bhaskar","1234");
+	@Order(33)
+	public void editNotes() throws InterruptedException {
+		testLogin();
 
-		NotePage notePage=new NotePage(driver);
+		NotePage notePage=new NotePage(driver,port);
+		addNotes();
+
+		notePage.editNote();
+
+		Assertions.assertTrue(
+				notePage.getFirstTitleValue().contains("updated")
+		);
+
+		Assertions.assertEquals("Note updated successfully.",notePage.getNoteOperationSuccessText());
+
+		Thread.sleep(2000);
+	}
+
+	@Test
+	@Order(34)
+	public void testNoteDelete(){
+		testLogin();
+		NotePage notePage=new NotePage(driver,port);
 		int rowCountBeforeDelete=notePage.getNotesRecCount();
 
 		notePage.deleteNote();
@@ -154,39 +153,24 @@ class CloudStorageApplicationTests {
 
 	//-------------------------  F I L E S  T E S T ---------------------
 	@Test
+	@Order(41)
 	public void addFileTest() throws InterruptedException {
-		testSignup();
 		testLogin();
-
-		FilesPage filesPage=new FilesPage(driver);
+		FilesPage filesPage=new FilesPage(driver,port);
 		filesPage.uploadFile("/home/tablu/Desktop/demo.txt");
 
 		Assertions.assertEquals(true,
 				filesPage.getOpSuccessMessage().contains("uploaded successfully."));
 
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 	}
 
 	@Test
-	public void deleteFileTest() throws InterruptedException {
-		LoginPage loginPage=new LoginPage(driver,port);
-		loginPage.submitPageWith("bhaskar","1234");
-
-		FilesPage filesPage=new FilesPage(driver);
-		filesPage.deleteFile();
-
-		Assertions.assertEquals(true,
-				filesPage.getOpSuccessMessage().contains("deleted successfully."));
-
-		Thread.sleep(5000);
-	}
-
-	@Test
+	@Order(42)
 	public void viewFilesTest() throws InterruptedException {
-		LoginPage loginPage=new LoginPage(driver,port);
-		loginPage.submitPageWith("bhaskar","1234");
+		testLogin();
 
-		FilesPage filesPage=new FilesPage(driver);
+		FilesPage filesPage=new FilesPage(driver,port);
 		int rowCount=filesPage.getFileRecCount();
 
 		System.out.println(rowCount);
@@ -197,32 +181,47 @@ class CloudStorageApplicationTests {
 
 	}
 
+	@Test
+	@Order(43)
+	public void deleteFileTest() throws InterruptedException {
+		testLogin();
+		FilesPage filesPage=new FilesPage(driver,port);
+		filesPage.deleteFile();
+
+		Assertions.assertEquals(true,
+				filesPage.getOpSuccessMessage().contains("deleted successfully."));
+
+		Thread.sleep(2000);
+	}
+
+
+
 	//-------------- C R E D E N T I A L   T E S T S -------------------
 	@Test
+	@Order(51)
 	public void addCredentialTest()throws InterruptedException{
-		LoginPage loginPage=new LoginPage(driver,port);
-		loginPage.submitPageWith("bhaskar","1234");
 
-		CredentialPage credentialPage=new CredentialPage(driver);
+		testLogin();
+
+		CredentialPage credentialPage=new CredentialPage(driver,port);
 		credentialPage.addCredential("http://mysite.com","bhaskar","1234");
 
 		Assertions.assertEquals("Your credentials added successfully.",credentialPage.getOpSuccessMessage());
 
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 	}
 
 	@Test
+	@Order(52)
 	public void deleteCredentialTest() throws InterruptedException {
-		LoginPage loginPage=new LoginPage(driver,port);
-		loginPage.submitPageWith("bhaskar","1234");
+		testLogin();
 
-
-		CredentialPage credentialPage=new CredentialPage(driver);
+		CredentialPage credentialPage=new CredentialPage(driver,port);
 		credentialPage.deleteCredential();
 
 		Assertions.assertEquals(true,
-				credentialPage.getOpSuccessMessage().contains("deleted successfully."));
+				credentialPage.getOpSuccessMessage().contains("successfully deleted"));
 
-		Thread.sleep(5000);
+		Thread.sleep(2000);
 	}
 }

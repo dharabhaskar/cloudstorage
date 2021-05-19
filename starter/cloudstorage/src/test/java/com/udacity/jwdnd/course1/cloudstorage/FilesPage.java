@@ -34,11 +34,11 @@ public class FilesPage {
     private final JavascriptExecutor executor;
     private final WebDriver driver;
 
-    public FilesPage(WebDriver driver) {
+    public FilesPage(WebDriver driver,int port) {
         PageFactory.initElements(driver, this);
         executor = (JavascriptExecutor) driver;
         this.driver = driver;
-
+        this.driver.get("http://localhost:" + port + "/home");
     }
 
     public void waitForField(WebElement field) {

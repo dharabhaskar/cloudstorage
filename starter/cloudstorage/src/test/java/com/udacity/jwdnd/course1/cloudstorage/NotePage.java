@@ -30,10 +30,10 @@ public class NotePage {
     @FindBy(id = "noteOpSuccess")
     private WebElement noteOpSuccessText;
 
-    @FindBy(xpath = "//*[@id=\"userTable\"]/tbody/tr[1]/td[1]/button")
+    @FindBy(xpath = "//*[@id=\"noteTable\"]/tbody/tr[1]/td[1]/button")
     WebElement firstEditButton;
 
-    @FindBy(xpath = "//*[@id=\"userTable\"]/tbody/tr[1]/th")
+    @FindBy(xpath = "//*[@id=\"noteTable\"]/tbody/tr[1]/th")
     WebElement firstNoteTitle;
 
     @FindBy(xpath = "//*[@id=\"noteTable\"]/tbody/tr/td[1]/a")
@@ -43,11 +43,11 @@ public class NotePage {
     private final JavascriptExecutor executor;
     private final WebDriver driver;
 
-    public NotePage(WebDriver driver) {
+    public NotePage(WebDriver driver,int port) {
         PageFactory.initElements(driver, this);
         executor = (JavascriptExecutor) driver;
         this.driver = driver;
-
+        this.driver.get("http://localhost:" + port + "/home");
     }
 
     public void waitForField(WebElement field) {

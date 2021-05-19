@@ -30,10 +30,11 @@ public class CredentialPage {
     @FindBy(xpath = "//*[@id=\"credentialTable\"]/tbody/tr/td/a[1]")
     private WebElement viewFileButton;
 
-    @FindBy(xpath = "//*[@id=\"credentialTable\"]/tbody/tr[1]/td[1]/a]")
+//    @FindBy(xpath = "//*[@id=\"credentialTable\"]/tbody/tr[1]/td[1]/a]")
+    @FindBy(xpath = "//*[@id=\"credentialTable\"]/tbody/tr/td[1]/a")
     private WebElement deleteFileButton;
 
-    @FindBy(xpath = "//*[@id=\"nav-credentials\"]/div[1]/div")
+    @FindBy(id = "credOpSuccess")
     private WebElement credOpSuccessText;
 
     @FindBy(xpath = "//*[@id=\"nav-credentials\"]/button")
@@ -43,11 +44,11 @@ public class CredentialPage {
     private final JavascriptExecutor executor;
     private final WebDriver driver;
 
-    public CredentialPage(WebDriver driver) {
+    public CredentialPage(WebDriver driver,int port) {
         PageFactory.initElements(driver, this);
         executor = (JavascriptExecutor) driver;
         this.driver = driver;
-
+        this.driver.get("http://localhost:" + port + "/home");
     }
 
     public void waitForField(WebElement field) {
@@ -101,6 +102,7 @@ public class CredentialPage {
 
 
     public String getOpSuccessMessage(){
+        waitForField(credOpSuccessText);
         return credOpSuccessText.getText();
     }
 
