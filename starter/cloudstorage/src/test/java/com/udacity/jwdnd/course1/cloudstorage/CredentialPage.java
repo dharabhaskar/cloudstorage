@@ -34,6 +34,9 @@ public class CredentialPage {
     @FindBy(xpath = "//*[@id=\"credentialTable\"]/tbody/tr/td[1]/a")
     private WebElement deleteFileButton;
 
+    @FindBy(xpath = "//*[@id=\"credentialTable\"]/tbody/tr[1]/td[1]/button")
+    WebElement firstEditButton;
+
     @FindBy(id = "credOpSuccess")
     private WebElement credOpSuccessText;
 
@@ -76,6 +79,25 @@ public class CredentialPage {
         credentialPassword.sendKeys(password);
 
         credentialPassword.submit();
+    }
+
+    public void editCredential() {
+        openCredTab();
+
+        waitForField(firstEditButton);
+        firstEditButton.click();
+        //executor.executeScript("arguments[0].click();", editButton);
+
+        waitForField(credentialUsername);
+        credentialUsername.sendKeys(credentialUsername.getText() + " updated");
+
+        waitForField(credentialPassword);
+        credentialPassword.sendKeys(credentialPassword.getText() + " update");
+
+        waitForField(credentialUrl);
+        credentialUrl.sendKeys(credentialUrl.getText() + " update");
+
+        credentialUrl.submit();
     }
 
 

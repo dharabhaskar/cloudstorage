@@ -123,13 +123,8 @@ class CloudStorageApplicationTests {
 		testLogin();
 
 		NotePage notePage=new NotePage(driver,port);
-		addNotes();
 
 		notePage.editNote();
-
-		Assertions.assertTrue(
-				notePage.getFirstTitleValue().contains("updated")
-		);
 
 		Assertions.assertEquals("Note updated successfully.",notePage.getNoteOperationSuccessText());
 
@@ -226,9 +221,22 @@ class CloudStorageApplicationTests {
 		Thread.sleep(2000);
 	}
 
-
 	@Test
 	@Order(53)
+	public void editCredentialTest() throws InterruptedException {
+		testLogin();
+
+		CredentialPage credentialPage=new CredentialPage(driver,port);
+		credentialPage.editCredential();
+
+		Assertions.assertEquals(true,
+				credentialPage.getOpSuccessMessage().contains("updated"));
+
+		Thread.sleep(2000);
+	}
+
+	@Test
+	@Order(54)
 	public void deleteCredentialTest() throws InterruptedException {
 		testLogin();
 
