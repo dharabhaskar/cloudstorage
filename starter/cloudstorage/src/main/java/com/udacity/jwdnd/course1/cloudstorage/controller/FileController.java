@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.Files;
 import com.udacity.jwdnd.course1.cloudstorage.service.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,9 @@ import static com.udacity.jwdnd.course1.cloudstorage.utils.Constants.*;
 @ControllerAdvice
 @RequestMapping("/home/files")
 public class FileController {
+
+    @Value("${spring.servlet.multipart.max-file-size}")
+    private String fileSize;
 
     private final FileService fileService;
     private final UserService userService;
@@ -95,7 +99,7 @@ public class FileController {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public String handleFileUploadError2(RedirectAttributes ra){
         ra.addAttribute(ERROR, true);
-        ra.addAttribute(MESSAGE_FILES,"Max file size limit exceeds");
+        ra.addAttribute(MESSAGE_FILES,"You can not upload file larger than "+fileSize);
         return REDIRECT_HOME;
     }
 }

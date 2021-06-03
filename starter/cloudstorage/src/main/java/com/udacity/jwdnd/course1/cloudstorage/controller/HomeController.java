@@ -34,6 +34,9 @@ public class HomeController {
     @GetMapping
     public String getNotesByUser(Authentication auth, Model model) {
         User user = userService.getUserByUsername(auth.getName());
+        if(user==null){
+            return "login";
+        }
         List<Note> notes = noteService.getNotesByUser(user.getUserid());
         List<Files> files= fileService.getFilesByUser(user.getUserid());
         List<Credential> credentials=credentialService.getAllCredentials(user.getUserid());
