@@ -60,6 +60,34 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
+	@Order(3)
+	public void testHomePageNotAccessibleWithoutLogin(){
+		this.driver.get("http://localhost:" + port + "/home");
+		//Checking without login we can not enter home page...
+		System.out.println("Current page title: "+driver.getTitle());
+		Assertions.assertEquals("Login", driver.getTitle());
+	}
+
+	@Test
+	@Order(4)
+	public void testAfterLogoutHomePageNotAccessible() throws InterruptedException {
+		testSignup();
+
+		LoginPage loginPage=new LoginPage(driver,port);
+		loginPage.submitPageWith("bhaskar","1234");
+
+		System.out.println("Current page title (Home expected): "+driver.getTitle());
+		Assertions.assertEquals("Home",driver.getTitle());
+
+		loginPage.logout();
+
+		this.driver.get("http://localhost:" + port + "/home");
+		//Checking without login we can not enter home page...
+		System.out.println("Current page title(Login expected): "+driver.getTitle());
+		Assertions.assertNotEquals("Home", driver.getTitle());
+	}
+
+	@Test
 	@Order(1)
 	public void testSignup() {
 		//Signup
